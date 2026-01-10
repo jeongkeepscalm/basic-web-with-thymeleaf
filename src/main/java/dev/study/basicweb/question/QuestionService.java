@@ -104,6 +104,10 @@ public class QuestionService {
         };
     }
 
+    public void updateViewCount(Question question) {
+        question.setViewCount(question.getViewCount() + 1);
+        questionRepository.save(question);
 
+    }
 
 }

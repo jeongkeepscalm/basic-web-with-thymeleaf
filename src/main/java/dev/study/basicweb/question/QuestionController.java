@@ -44,7 +44,10 @@ public class QuestionController {
             , @PathVariable Integer id
             , AnswerForm answerForm
             , @RequestParam(value = "page", defaultValue = "0") int page) {
+
         Question question = this.questionService.getQuestion(id);
+        this.questionService.updateViewCount(question);
+
         model.addAttribute("question", question);
 
         // 답글 페이징
@@ -130,6 +133,8 @@ public class QuestionController {
         this.questionService.vote(question, siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
+
+
 
 }
 
