@@ -1,5 +1,6 @@
 package dev.study.basicweb.answer;
 
+import dev.study.basicweb.comment.Comment;
 import dev.study.basicweb.question.Question;
 import dev.study.basicweb.user.SiteUser;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,5 +37,9 @@ public class Answer {
     // 여러사람이 하나의 답변을 달 수 있다.
     @ManyToMany
     Set<SiteUser> voter;
+
+    // 답변에 댓글
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList;
 
 }
