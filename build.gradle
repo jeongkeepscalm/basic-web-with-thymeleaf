@@ -53,6 +53,8 @@ dependencies {
     // markdown : dependency-management 가 관리하지 않은 라이브러리로 버전 명시 필수
     implementation 'org.commonmark:commonmark:0.21.0'
 
+    // email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 }
 
