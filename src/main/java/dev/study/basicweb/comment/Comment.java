@@ -1,6 +1,7 @@
 package dev.study.basicweb.comment;
 
 import dev.study.basicweb.answer.Answer;
+import dev.study.basicweb.question.Question;
 import dev.study.basicweb.user.SiteUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -40,6 +41,9 @@ public class Comment {
 
     @ManyToOne
     private Answer answer;
+
+    @ManyToOne
+    private Question question;
 
 
 }

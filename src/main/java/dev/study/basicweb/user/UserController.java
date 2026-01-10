@@ -124,4 +124,14 @@ public class UserController {
 
         return "redirect:/";
     }
+
+    // [프로필 화면 이동]
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/profile")
+    public String profile(Principal principal, Model model) {
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        model.addAttribute("siteUser", siteUser);
+        return "profile";
+    }
+
 }

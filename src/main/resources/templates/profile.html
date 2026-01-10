@@ -1,0 +1,97 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <h2 class="border-bottom py-2">내 프로필</h2>
+
+    <div class="card my-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${siteUser.username}"></h5>
+            <p class="card-text text-muted" th:text="${siteUser.email}"></p>
+            <a th:href="@{/user/changepassword}" class="btn btn-sm btn-outline-secondary">비밀번호 변경</a>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="profileTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab">
+                내 질문 <span class="badge bg-secondary" th:text="${#lists.size(siteUser.questionList)}"></span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="answers-tab" data-bs-toggle="tab" data-bs-target="#answers" type="button" role="tab">
+                내 답변 <span class="badge bg-secondary" th:text="${#lists.size(siteUser.answerList)}"></span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab">
+                내 댓글 <span class="badge bg-secondary" th:text="${#lists.size(siteUser.commentList)}"></span>
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content p-3 border border-top-0" id="profileTabContent">
+
+        <div class="tab-pane fade show active" id="questions" role="tabpanel">
+            <table class="table table-hover" th:if="${!siteUser.questionList.isEmpty()}">
+                <thead>
+                <tr class="table-dark">
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일시</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="question, loop : ${siteUser.questionList}">
+                    <td th:text="${loop.count}"></td>
+                    <td>
+                        <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                    </td>
+                    <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:if="${siteUser.questionList.isEmpty()}" class="text-center text-muted py-4">작성한 질문이 없습니다.</p>
+        </div>
+
+        <div class="tab-pane fade" id="answers" role="tabpanel">
+            <div class="list-group" th:if="${!siteUser.answerList.isEmpty()}">
+                <a th:each="answer : ${siteUser.answerList}"
+                   th:href="@{|/question/detail/${answer.question.id}#answer_${answer.id}|}"
+                   class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1 text-truncate" style="max-width: 70%;" th:text="${answer.content}"></h6>
+                        <small class="text-muted" th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></small>
+                    </div>
+                    <small class="text-muted">
+                        원문: <span th:text="${answer.question.subject}"></span>
+                    </small>
+                </a>
+            </div>
+            <p th:if="${siteUser.answerList.isEmpty()}" class="text-center text-muted py-4">작성한 답변이 없습니다.</p>
+        </div>
+
+        <div class="tab-pane fade" id="comments" role="tabpanel">
+            <ul class="list-group list-group-flush" th:if="${!siteUser.commentList.isEmpty()}">
+                <li th:each="comment : ${siteUser.commentList}" class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-truncate" style="max-width: 60%;" th:text="${comment.content}"></span>
+                        <small class="text-muted" th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></small>
+                    </div>
+                    <div class="mt-1" style="font-size: 0.8rem;">
+                        <a th:if="${comment.question != null}"
+                           th:href="@{|/question/detail/${comment.question.id}|}"
+                           class="text-decoration-none text-secondary">
+                            → 질문: <span th:text="${comment.question.subject}"></span>
+                        </a>
+                        <a th:if="${comment.answer != null}"
+                           th:href="@{|/question/detail/${comment.answer.question.id}#answer_${comment.answer.id}|}"
+                           class="text-decoration-none text-secondary">
+                            → 답변에 남긴 댓글
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <p th:if="${siteUser.commentList.isEmpty()}" class="text-center text-muted py-4">작성한 댓글이 없습니다.</p>
+        </div>
+    </div>
+</div>
+</html>
