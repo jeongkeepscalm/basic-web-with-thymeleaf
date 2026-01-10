@@ -2,12 +2,16 @@ package dev.study.basicweb;
 
 import dev.study.basicweb.answer.Answer;
 import dev.study.basicweb.answer.AnswerRepository;
+import dev.study.basicweb.answer.AnswerService;
 import dev.study.basicweb.question.Question;
 import dev.study.basicweb.question.QuestionRepository;
 import dev.study.basicweb.question.QuestionService;
+import dev.study.basicweb.user.SiteUser;
+import dev.study.basicweb.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -28,6 +32,12 @@ class BasicWebApplicationTests {
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    @Autowired
+    private AnswerService answerService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void testJpa() {
@@ -126,9 +136,19 @@ class BasicWebApplicationTests {
         for (int i = 1; i <= 300; i++) {
             String subject = String.format("test data : [%03d]", i);
             String content = "no content";
-            questionService.create(subject, content);
+//            questionService.create(subject, content);
         }
     }
+
+    @Test
+    void insertBulkAnswer(){
+        Question question = questionService.getQuestion(310);
+        SiteUser siteUser = userRepository.findByUsername("ojg").get();
+        for (int i = 1; i <= 300; i++) {
+            answerService.create(question, "답변 " + i, siteUser);
+        }
+    }
+
 
     // 선택 삭제
     @Test

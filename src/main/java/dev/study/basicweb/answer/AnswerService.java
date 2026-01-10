@@ -2,11 +2,18 @@ package dev.study.basicweb.answer;
 
 import dev.study.basicweb.DataNotFoundException;
 import dev.study.basicweb.question.Question;
+import dev.study.basicweb.question.QuestionService;
 import dev.study.basicweb.user.SiteUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,6 +21,7 @@ import java.util.Optional;
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
+    private final QuestionService questionService;
 
     public Answer create(Question question, String content, SiteUser author) {
         Answer answer = new Answer();
@@ -48,5 +56,10 @@ public class AnswerService {
         answer.getVoter().add(siteUser);
         this.answerRepository.save(answer);
     }
+
+    public Page<Answer> getAnswersWithPaging(Question question, int page) {
+        return answerRepository.findAllByQuestion(question, PageRequest.of(page, 10));
+    }
+
 
 }

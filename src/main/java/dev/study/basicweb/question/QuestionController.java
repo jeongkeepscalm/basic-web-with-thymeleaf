@@ -1,6 +1,8 @@
 package dev.study.basicweb.question;
 
+import dev.study.basicweb.answer.Answer;
 import dev.study.basicweb.answer.AnswerForm;
+import dev.study.basicweb.answer.AnswerService;
 import dev.study.basicweb.user.SiteUser;
 import dev.study.basicweb.user.UserService;
 import jakarta.validation.Valid;
@@ -24,19 +26,31 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final AnswerService answerService;
     private final UserService userService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Question> paging = questionService.getList(page);
+    public String list(Model model
+            , @RequestParam(value = "page", defaultValue = "0") int page
+            , @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Question> paging = questionService.getList(page, kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw); // 검색어 유지용
         return "question_list";
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable Integer id, AnswerForm answerForm) {
+    public String detail(Model model
+            , @PathVariable Integer id
+            , AnswerForm answerForm
+            , @RequestParam(value = "page", defaultValue = "0") int page) {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
+
+        // 답글 페이징
+        Page<Answer> paging = this.answerService.getAnswersWithPaging(question, page);
+        model.addAttribute("paging", paging);
+
         return "question_detail";
     }
 
