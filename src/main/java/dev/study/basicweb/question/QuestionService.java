@@ -4,6 +4,7 @@ import dev.study.basicweb.DataNotFoundException;
 import dev.study.basicweb.answer.Answer;
 import dev.study.basicweb.user.SiteUser;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
@@ -104,10 +105,9 @@ public class QuestionService {
         };
     }
 
-    public void updateViewCount(Question question) {
-        question.setViewCount(question.getViewCount() + 1);
-        questionRepository.save(question);
-
+    @Transactional // update 쿼리 실행을 위해 필수
+    public void updateViewCount(Integer id) {
+        this.questionRepository.updateViewCount(id);
     }
 
 }

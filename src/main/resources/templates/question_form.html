@@ -19,4 +19,14 @@
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
     </form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    var easyMDE = new EasyMDE({
+        element: document.getElementById('content'),
+        // [옵션 설정]
+        spellChecker: false,       // 한글 붉은 밑줄 방지 (필수 권장)
+        maxHeight: "300px",        // 에디터 최대 높이
+        placeholder: "내용을 입력하세요...",
+        status: ["lines", "words"], // 하단 상태바 표시 항목
+    });
+</script>
 </html>

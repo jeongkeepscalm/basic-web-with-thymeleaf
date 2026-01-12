@@ -37,6 +37,10 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
             + "   or u2.username like %:kw% ")
     Page<Question> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
 
+    @Modifying // INSERT, UPDATE, DELETE 쿼리에 필수
+    @Query("update Question q set q.viewCount = q.viewCount + 1 where q.id = :id")
+    int updateViewCount(@Param("id") Integer id);
+
 
 
 

@@ -45,8 +45,11 @@ public class QuestionController {
             , AnswerForm answerForm
             , @RequestParam(value = "page", defaultValue = "0") int page) {
 
+        // 1. 조회수 증가 (먼저 실행)
+        this.questionService.updateViewCount(id);
+
+        // 2. 데이터 조회 (증가된 조회수가 반영된 데이터를 가져옴)
         Question question = this.questionService.getQuestion(id);
-        this.questionService.updateViewCount(question);
 
         model.addAttribute("question", question);
 
